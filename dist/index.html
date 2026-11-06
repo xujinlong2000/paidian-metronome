@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ee">
+  <meta name="description" content="一个简单、精准的有声节拍器。调节速度，按下开始，让练习回到节奏里。">
+  <title>拍点 · 简单节拍器</title>
+  <style>
+    :root{color-scheme:light;--bg:#f5f3ee;--paper:#fffcf7;--ink:#292c28;--muted:#7b7d74;--line:#e7e5dd;--accent:#d75b35;--soft:#f4e4da}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;min-height:100svh}button,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible{outline:3px solid #b94324;outline-offset:5px}button{touch-action:manipulation}button:disabled{opacity:.35;cursor:default}
+    .shell{width:min(100% - 40px,520px);margin:auto;padding:48px 0 26px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}.brand{display:flex;gap:11px;align-items:center}.brand-mark{width:30px;height:30px;display:grid;grid-template-columns:repeat(3,3px);gap:4px;align-items:center;justify-content:center;transform:rotate(-12deg)}.brand-mark i{height:13px;background:var(--accent);border-radius:2px}.brand-mark i:nth-child(2){height:25px}.brand-mark i:nth-child(3){height:18px}h1{font-size:22px;letter-spacing:2px;font-weight:650;margin:0}.edition{font-size:10px;letter-spacing:2px;color:var(--muted);font-weight:550}.intro{font-size:13px;color:var(--muted);letter-spacing:1px;margin:0 0 24px}
+    main{background:var(--paper);border:1px solid #e4e1d8;border-radius:24px;padding:32px 34px 28px;box-shadow:0 14px 45px -25px #4a402d35,0 2px 4px #4a402d04;position:relative;overflow:hidden}.topline{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);letter-spacing:1.5px}.status{display:flex;gap:7px;align-items:center;letter-spacing:.5px}.status-dot{width:6px;height:6px;border-radius:50%;background:#b5b6ad}.playing .status-dot{background:var(--accent);box-shadow:0 0 0 3px #d75b3514}.readout{display:flex;align-items:center;justify-content:center;gap:22px;padding:25px 0 4px}.step{border:1px solid var(--line);width:40px;height:40px;flex-shrink:0;border-radius:50%;background:transparent;color:#75796f;font-size:25px;line-height:1;transition:background .15s}.step:hover{background:#eeece4}.bpm-wrap{text-align:center;min-width:178px}.bpm{appearance:textfield;-moz-appearance:textfield;width:190px;border:0;background:transparent;text-align:center;display:block;font-size:100px;line-height:1.1;letter-spacing:-7px;color:var(--ink);font-weight:430;font-family:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,sans-serif;font-variant-numeric:tabular-nums;padding:0 5px 0 0;border-radius:8px}.bpm::-webkit-inner-spin-button,.bpm::-webkit-outer-spin-button{appearance:none;margin:0}.bpm-unit{display:block;font-size:11px;letter-spacing:3px;color:var(--muted);margin-top:4px}.tempo-name{text-align:center;font-size:12px;color:var(--accent);letter-spacing:1px;height:18px;margin:11px 0 22px}.range-wrap{padding:0 3px}.tempo-range{display:block;width:100%;height:20px;margin:0;cursor:pointer;appearance:none;background:transparent;accent-color:var(--accent);--fill:30.77%}.tempo-range::-webkit-slider-runnable-track{height:4px;border-radius:5px;background:linear-gradient(to right,var(--accent) var(--fill),var(--line) var(--fill))}.tempo-range::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border:3px solid var(--paper);border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px #d75b3540,0 2px 4px #0002;margin-top:-6px}.tempo-range::-moz-range-track{height:4px;border-radius:5px;background:var(--line)}.tempo-range::-moz-range-progress{height:4px;background:var(--accent)}.tempo-range::-moz-range-thumb{width:12px;height:12px;background:var(--accent);border:3px solid var(--paper);border-radius:50%}.range-ends{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.5px;color:#999c92;margin-top:6px}.beat-lights{display:flex;justify-content:center;gap:13px;align-items:center;height:62px;margin-top:8px}.beat{width:13px;height:13px;border-radius:50%;background:#e9e7df;border:1px solid #e1ded4;transition:background 60ms,transform 60ms,box-shadow 60ms}.beat.accent{border-color:#d8a390;background:#eed9cd}.beat.active{background:var(--ink);border-color:var(--ink);transform:scale(1.15);box-shadow:0 0 0 5px #292c2808}.beat.accent.active{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px #d75b3510}.play{display:flex;gap:11px;align-items:center;justify-content:center;background:var(--accent);color:#fff;border:0;width:100%;height:58px;border-radius:13px;font-size:15px;font-weight:580;letter-spacing:1.5px;box-shadow:0 4px 7px #d75b3513;transition:background .15s,transform .15s}.play:hover{background:#c6502d}.play:active{transform:scale(.985)}.play svg{width:18px;height:18px;fill:currentColor}.pause-icon{display:none}.playing .pause-icon{display:block}.playing .play-icon{display:none}.controls{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:26px;padding-top:23px;gap:12px}.control-label{font-size:11px;color:var(--muted);margin-bottom:10px;letter-spacing:.6px}.meters{display:flex;gap:4px}.meter{height:32px;min-width:36px;border:1px solid transparent;border-radius:7px;background:transparent;color:#898c80;font-size:11px;font-variant-numeric:tabular-nums}.meter[aria-pressed="true"]{background:#f0eee6;color:var(--ink);border-color:#e5e2d8;font-weight:600}.meter:hover{background:#f0eee6}.tap{height:37px;padding:0 17px;border-radius:8px;border:1px solid #deded4;background:transparent;font-size:12px;letter-spacing:.3px;color:#6c7066;transition:background .15s}.tap:hover,.tap.tapped{background:#eeece4}.tap-label{text-align:right}.footer-control{display:flex;justify-content:space-between;align-items:center;margin-top:21px;gap:18px;font-size:11px;color:var(--muted)}.accent-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;white-space:nowrap}.accent-toggle input{appearance:none;width:25px;height:15px;background:#dadbd2;border-radius:10px;margin:0;position:relative;cursor:pointer;transition:background .15s}.accent-toggle input:after{content:"";position:absolute;width:9px;height:9px;left:3px;top:3px;border-radius:50%;background:#fff;transition:transform .15s}.accent-toggle input:checked{background:var(--accent)}.accent-toggle input:checked:after{transform:translateX(10px)}.volume-wrap{display:flex;align-items:center;gap:9px}.volume-wrap svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5}.volume{width:78px;height:3px;accent-color:var(--accent);cursor:pointer}.error{display:none;font-size:12px;line-height:1.7;color:#b34228;margin:18px 0 0}.error.visible{display:block}footer{text-align:center;font-size:11px;line-height:1.8;color:#989b91;margin-top:25px;letter-spacing:.4px}.keyboard{font-size:10px;margin-top:5px;color:#a5a79f}kbd{font:inherit;border:1px solid #dddfd5;border-radius:3px;padding:1px 5px;margin:0 2px}.pulse-line{position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity .15s}.flash .pulse-line{opacity:.7}noscript{display:block;padding:20px;color:#b34228}
+    @media(max-width:440px){.shell{width:calc(100% - 32px);padding-top:28px}header{margin-bottom:23px}main{padding:27px 23px 24px}.readout{gap:12px}.bpm{font-size:88px;width:174px}.bpm-wrap{min-width:170px}.step{height:36px;width:36px}.controls{gap:8px}.tap{padding:0 13px}.edition{font-size:9px}.intro{font-size:12px}.keyboard{display:none}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header><div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><h1>拍点</h1></div><span class="edition">A LITTLE RHYTHM, EVERY DAY</span></header>
+  <p class="intro">放慢一点，或快一点。找到你的节奏。</p>
+  <main id="metronome">
+    <div class="pulse-line" aria-hidden="true"></div>
+    <div class="topline"><span>节拍器 / METRONOME</span><span class="status"><span class="status-dot"></span><span id="status" role="status">准备就绪</span></span></div>
+    <div class="readout">
+      <button class="step" id="minus" aria-label="速度减 1">−</button>
+      <div class="bpm-wrap"><input id="bpm" class="bpm" type="number" min="20" max="280" step="1" value="100" aria-label="每分钟节拍数" inputmode="numeric"><label class="bpm-unit" for="bpm">BPM</label></div>
+      <button class="step" id="plus" aria-label="速度加 1">+</button>
+    </div>
+    <p class="tempo-name" id="tempoName">Andante · 行板</p>
+    <div class="range-wrap"><input class="tempo-range" id="tempo" type="range" min="20" max="280" value="100" aria-label="调节速度"><div class="range-ends"><span>20</span><span>280</span></div></div>
+    <div class="beat-lights" id="beats" role="img" aria-label="每小节 4 拍"></div>
+    <button class="play" id="play" aria-pressed="false"><svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.8c0-.7.8-1.1 1.4-.7l12 7.2a.8.8 0 0 1 0 1.4l-12 7.2c-.6.4-1.4 0-1.4-.7z"/></svg><svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg><span id="playLabel">开始节拍</span></button>
+    <div class="controls">
+      <div><div class="control-label">每小节拍数</div><div class="meters" role="group" aria-label="选择拍号"><button class="meter" data-beats="2" aria-pressed="false">2/4</button><button class="meter" data-beats="3" aria-pressed="false">3/4</button><button class="meter" data-beats="4" aria-pressed="true">4/4</button><button class="meter" data-beats="6" aria-pressed="false">6/4</button></div></div>
+      <div><div class="control-label tap-label" id="tapHint">跟着节奏敲几下</div><button class="tap" id="tap">敲击测速 <span aria-hidden="true">↗</span></button></div>
+    </div>
+    <div class="footer-control"><label class="accent-toggle"><input type="checkbox" id="accent" checked>首拍重音</label><label class="volume-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4zM15 8c2 2 2 6 0 8M18 5c4 4 4 10 0 14"/></svg><span class="sr-label">音量</span><input class="volume" id="volume" type="range" min="0" max="100" value="70" aria-label="音量"></label></div>
+    <p class="error" id="error" role="alert"></p>
+  </main>
+  <footer>按下开始，让每一拍都听得见。<div class="keyboard"><kbd>空格</kbd> 开始 / 暂停 <span aria-hidden="true"> · </span><kbd>↑</kbd><kbd>↓</kbd> 调整速度 <span aria-hidden="true"> · </span><kbd>T</kbd> 敲击测速</div></footer>
+  <noscript>请启用 JavaScript 后使用节拍器。</noscript>
+</div>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const ui = {root:$('metronome'), bpm:$('bpm'), tempo:$('tempo'), name:$('tempoName'), beats:$('beats'), play:$('play'), label:$('playLabel'), status:$('status'), volume:$('volume'), accent:$('accent'), error:$('error'), tap:$('tap'), tapHint:$('tapHint')};
+  let bpm=100, meter=4, accent=true, volume=.7, running=false, starting=false;
+  let context, master, timer, frame, nextTime=0, nextBeat=0, events=[], nodes=new Set(), taps=[], tapTimer, wakeLock;
+  const storeKey='paidian-metronome';
+  function notifyDesktop(playing){try{window.webkit?.messageHandlers?.playback?.postMessage(playing);}catch{}}
+  function save(){try{localStorage.setItem(storeKey,JSON.stringify({bpm,meter,accent,volume}));}catch{}}
+  function tempoName(value){if(value<40)return 'Largo · 广板';if(value<60)return 'Lento · 慢板';if(value<76)return 'Adagio · 柔板';if(value<108)return 'Andante · 行板';if(value<120)return 'Moderato · 中板';if(value<168)return 'Allegro · 快板';if(value<200)return 'Vivace · 活板';return 'Presto · 急板';}
+  function setBpm(value){bpm=Math.max(20,Math.min(280,Math.round(Number(value)||100)));ui.bpm.value=bpm;ui.tempo.value=bpm;ui.tempo.style.setProperty('--fill',((bpm-20)/260*100)+'%');ui.name.textContent=tempoName(bpm);$('minus').disabled=bpm===20;$('plus').disabled=bpm===280;save();}
+  function renderBeats(){ui.beats.replaceChildren();for(let i=0;i<meter;i++){const dot=document.createElement('span');dot.className='beat'+(i===0&&accent?' accent':'');ui.beats.append(dot);}ui.beats.setAttribute('aria-label',`每小节 ${meter} 拍`);}
+  function markBeat(index){[...ui.beats.children].forEach((dot,i)=>dot.classList.toggle('active',index===i));}
+  function setMeter(value){meter=value;document.querySelectorAll('.meter').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.beats)===meter)));if(running){clearTimeout(timer);cancelScheduled();nextBeat=0;nextTime=context.currentTime+.035;renderBeats();schedule();}else{renderBeats();}save();}
+  function cancelScheduled(){events=[];for(const node of nodes){try{node.stop();}catch{}}nodes.clear();markBeat(-1);}
+  function click(time,strong){
+    // Short, rounded transients. The audio clock sets timing independently of painting.
+    const oscillator=context.createOscillator();
+    const gain=context.createGain();
+    oscillator.type='sine';
+    oscillator.frequency.setValueAtTime(strong?1550:1050,time);
+    oscillator.frequency.exponentialRampToValueAtTime(strong?700:480,time+.035);
+    gain.gain.setValueAtTime(0,time);
+    gain.gain.linearRampToValueAtTime(strong?.85:.58,time+.0015);
+    gain.gain.exponentialRampToValueAtTime(.0001,time+.055);
+    oscillator.connect(gain);gain.connect(master);
+    oscillator.onended=()=>{nodes.delete(oscillator);oscillator.disconnect();gain.disconnect();};
+    nodes.add(oscillator);oscillator.start(time);oscillator.stop(time+.065);
+  }
+  function schedule(){if(!running)return;const now=context.currentTime;if(nextTime<now-.1){nextTime=now+.025;}while(nextTime<now+.12){click(nextTime,accent&&nextBeat===0);events.push({time:nextTime,index:nextBeat});nextTime+=60/bpm;nextBeat=(nextBeat+1)%meter;}timer=setTimeout(schedule,25);}
+  function animate(){if(!running)return;const now=context.currentTime;while(events.length&&events[0].time<=now){const event=events.shift();markBeat(event.index);ui.root.classList.add('flash');ui.root.dataset.flashUntil=String(event.time+.09);}if(now>Number(ui.root.dataset.flashUntil||0))ui.root.classList.remove('flash');frame=requestAnimationFrame(animate);}
+  async function keepAwake(){try{if(running&&document.visibilityState==='visible'&&navigator.wakeLock){wakeLock=await navigator.wakeLock.request('screen');if(!running){await wakeLock.release();wakeLock=null;}}}catch{}}
+  async function start(){
+    if(running||starting)return;starting=true;ui.error.classList.remove('visible');
+    try{
+      const AudioCtx=window.AudioContext||window.webkitAudioContext;
+      if(!AudioCtx)throw new Error('这个浏览器暂不支持声音播放，请使用 Safari、Chrome 或 Edge。');
+      if(!context){context=new AudioCtx();master=context.createGain();master.gain.value=volume;master.connect(context.destination);context.addEventListener('statechange',()=>{if(running&&context.state!=='running')stop();});}
+      await context.resume();
+      if(context.state!=='running')throw new Error('声音尚未启用，请再点一次开始，并检查设备音量。');
+      running=true;nextBeat=0;nextTime=context.currentTime+.04;events=[];
+      ui.root.classList.add('playing');ui.label.textContent='暂停节拍';ui.status.textContent='正在打拍';ui.play.setAttribute('aria-pressed','true');
+      notifyDesktop(true);schedule();animate();keepAwake();
+    }catch(error){stop();ui.error.textContent=error.message||'声音播放失败，请再试一次。';ui.error.classList.add('visible');}finally{starting=false;}
+  }
+  function stop(){running=false;notifyDesktop(false);clearTimeout(timer);cancelAnimationFrame(frame);cancelScheduled();ui.root.classList.remove('playing','flash');ui.label.textContent='开始节拍';ui.status.textContent='准备就绪';ui.play.setAttribute('aria-pressed','false');if(wakeLock){wakeLock.release().catch(()=>{});wakeLock=null;}}
+  function tap(){const now=performance.now();if(taps.length&&now-taps.at(-1)>3000)taps=[];taps.push(now);if(taps.length>6)taps.shift();if(taps.length>1){const intervals=taps.slice(1).map((t,i)=>t-taps[i]);const average=intervals.reduce((a,b)=>a+b,0)/intervals.length;setBpm(60000/average);}ui.tapHint.textContent=taps.length<2?'再敲一下，测出速度':`已跟随 · ${bpm} BPM`;ui.tap.classList.add('tapped');setTimeout(()=>ui.tap.classList.remove('tapped'),100);clearTimeout(tapTimer);tapTimer=setTimeout(()=>{taps=[];ui.tapHint.textContent='跟着节奏敲几下';},3000);}
+  ui.play.addEventListener('click',()=>running?stop():start());
+  ui.tempo.addEventListener('input',event=>setBpm(event.target.value));
+  ui.bpm.addEventListener('change',event=>setBpm(event.target.value));
+  ui.bpm.addEventListener('keydown',event=>{if(event.key==='Enter'){setBpm(event.target.value);event.target.blur();}});
+  $('minus').addEventListener('click',()=>setBpm(bpm-1));$('plus').addEventListener('click',()=>setBpm(bpm+1));
+  document.querySelectorAll('.meter').forEach(button=>button.addEventListener('click',()=>setMeter(Number(button.dataset.beats))));
+  ui.accent.addEventListener('change',()=>{accent=ui.accent.checked;[...ui.beats.children].forEach((dot,i)=>dot.classList.toggle('accent',i===0&&accent));save();});
+  ui.volume.addEventListener('input',()=>{volume=Number(ui.volume.value)/100;if(master)master.gain.setTargetAtTime(volume,context.currentTime,.015);save();});
+  ui.tap.addEventListener('click',tap);
+  document.addEventListener('keydown',event=>{if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||['INPUT','TEXTAREA','SELECT','BUTTON'].includes(event.target.tagName)||event.target.isContentEditable)return;if(event.code==='Space'){event.preventDefault();running?stop():start();}else if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();setBpm(bpm+(event.key==='ArrowUp'?1:-1)*(event.shiftKey?5:1));}else if(event.key.toLowerCase()==='t'){event.preventDefault();tap();}});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&running)keepAwake();});
+  window.addEventListener('pagehide',stop);
+  try{const saved=JSON.parse(localStorage.getItem(storeKey));if(saved){if(Number.isFinite(saved.bpm))bpm=saved.bpm;if([2,3,4,6].includes(saved.meter))meter=saved.meter;if(typeof saved.accent==='boolean')accent=saved.accent;if(Number.isFinite(saved.volume))volume=Math.max(0,Math.min(1,saved.volume));}}catch{}
+  ui.accent.checked=accent;ui.volume.value=volume*100;setBpm(bpm);setMeter(meter);
+})();
+</script>
+</body>
+</html>
